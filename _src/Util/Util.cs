@@ -14,7 +14,7 @@ namespace WebUnitsApiRipper.Util
         {
             if (!Enum.IsDefined(typeof(CourseCode), code))
             {
-                SendEmail.SendNote("New CourseCode", $"The Code {code} is not in the {nameof(CourseCode)} enum.\n\n{File.ReadAllText("tmp.txt")}");
+                SendEmail.SendNote("New CourseCode", $"The Code {code} is not in the {nameof(CourseCode)} enum.");
                 return CourseCode.Unknown;
             }
             return (CourseCode)code;
@@ -27,7 +27,7 @@ namespace WebUnitsApiRipper.Util
                 case "UNTIS_ADDITIONAL": return LessonCode.UNTIS_ADDITIONAL;
                 case "UNTIS_LESSON": return LessonCode.UNTIS_LESSON;
                 default:
-                    SendEmail.SendNote("New LessonCode", $"The Code {code} is not in the {nameof(LessonCode)} enum.\n\n{File.ReadAllText("tmp.txt")}");
+                    SendEmail.SendNote("New LessonCode", $"The Code {code} is not in the {nameof(LessonCode)} enum.");
                     return LessonCode.Unknown;
             }
         }
@@ -41,7 +41,7 @@ namespace WebUnitsApiRipper.Util
                 case "CANCEL": return CellState.CANCEL;
                 case "SUBSTITUTION": return CellState.SUBSTITUTION;
                 default:
-                    SendEmail.SendNote("New CellState", $"The State {state} is not in the {nameof(CellState)} enum.\n\n{File.ReadAllText("tmp.txt")}");
+                    SendEmail.SendNote("New CellState", $"The State {state} is not in the {nameof(CellState)} enum.");
                     return CellState.Unknown;
             }
         }

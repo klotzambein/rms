@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -9,6 +10,9 @@ namespace WebUnitsApiRipper.Util
     {
         public static void SendNote(string subject, string body)
         {
+#if DEBUG
+            throw new Exception();
+#endif
             var fromAddress = new MailAddress("mynotsafeacc@gmail.com", "Not Safe");
             var toAddress = new MailAddress("robin@kock-hamburg.de", "Robin");
             const string fromPassword = "RobinIstToll";
@@ -26,7 +30,7 @@ namespace WebUnitsApiRipper.Util
                 using (var message = new MailMessage(fromAddress, toAddress)
                 {
                     Subject = "WebUnits: " + subject,
-                    Body = body
+                    Body = body + "\n\n" + File.ReadAllText("tmp.json")
                 })
                 {
                     smtp.Send(message);
