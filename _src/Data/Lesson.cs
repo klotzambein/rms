@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using WebUnitsApiRipper.Util;
 
 namespace WebUnitsApiRipper.Data
 {
-    public class Course
+    public class Lesson
     {
-        public Course(string text, List<CourseInfo> infos, DateTime start, int duration, int priority, CourseCode code, bool isStandard, bool isEvent, int id, int lessonId, int lessonNumber, LessonCode lessonCode, CellState cellState)
+        public Lesson(string text, List<LessonInfo> infos, DateTime start, int duration, int priority, CourseCode code, bool isStandard, bool isEvent, int id, int lessonId, int lessonNumber, LessonCode lessonCode, CellState cellState)
         {
             Text = text;
             Infos = infos;
@@ -23,7 +24,7 @@ namespace WebUnitsApiRipper.Data
             CellState = cellState;
         }
 
-        public Course(JsonClassesStage2.Entry legacyCource, List<CourseInfo> allInfos)
+        public Lesson(JsonClassesStage2.Entry legacyCource, List<LessonInfo> allInfos)
         {
             Text = "";
             if (legacyCource.lessonText != null) Text += $"lessonText={legacyCource.lessonText}\n";
@@ -52,12 +53,12 @@ namespace WebUnitsApiRipper.Data
             Id = legacyCource.id;
             LessonId = legacyCource.lessonId;
             LessonNumber = legacyCource.lessonNumber;
-            LessonCode = Util.ParseLessonCode(legacyCource.lessonCode);
-            Code = Util.ParseCourseCode(legacyCource.code);
-            CellState = Util.ParseCellState(legacyCource.cellState);
+            LessonCode = ParseUtil.ParseLessonCode(legacyCource.lessonCode);
+            Code = ParseUtil.ParseCourseCode(legacyCource.code);
+            CellState = ParseUtil.ParseCellState(legacyCource.cellState);
         }
         public string Text { get; }
-        public List<CourseInfo> Infos { get; }
+        public List<LessonInfo> Infos { get; }
         public DateTime Start { get; }
         public int Duration { get; }
         public int Priority { get; }

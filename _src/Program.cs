@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using IntervalArray;
 
 namespace WebUnitsApiRipper
 {

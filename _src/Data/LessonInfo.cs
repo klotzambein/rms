@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.Drawing;
+using WebUnitsApiRipper.Util;
 
 namespace WebUnitsApiRipper.Data
 {
-    public class CourseInfo
+    public class LessonInfo
     {
-        public CourseInfo(string name, List<string> altNames, List<Color> colors, int id, int type)
+        public LessonInfo(string name, List<string> altNames, List<Color> colors, int id, int type)
         {
             Name = name;
             AltNames = altNames;
@@ -13,7 +14,7 @@ namespace WebUnitsApiRipper.Data
             Id = id;
             Type = type;
         }
-        public CourseInfo(JsonClassesStage2.Element legacyCourceInfo)
+        public LessonInfo(JsonClassesStage2.Element legacyCourceInfo)
         {
             AltNames = new List<string>();
             AddName(legacyCourceInfo.name);
@@ -22,8 +23,8 @@ namespace WebUnitsApiRipper.Data
             AddName(legacyCourceInfo.displayname);
 
             Colors = new List<Color>();
-            if (!string.IsNullOrEmpty(legacyCourceInfo.backColor)) Colors.Add(Util.ParseColor(legacyCourceInfo.backColor));
-            if (!string.IsNullOrEmpty(legacyCourceInfo.foreColor)) Colors.Add(Util.ParseColor(legacyCourceInfo.foreColor));
+            if (!string.IsNullOrEmpty(legacyCourceInfo.backColor)) Colors.Add(ParseUtil.ParseColor(legacyCourceInfo.backColor));
+            if (!string.IsNullOrEmpty(legacyCourceInfo.foreColor)) Colors.Add(ParseUtil.ParseColor(legacyCourceInfo.foreColor));
 
             Id = legacyCourceInfo.id;
             Type = legacyCourceInfo.type;

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -6,7 +7,7 @@ using WebUnitsApiRipper.Data;
 
 namespace WebUnitsApiRipper.Util
 {
-    public static class EnumUtil
+    public static class ParseUtil
     {
         public static CourseCode ParseCourseCode(int code)
         {
@@ -48,6 +49,21 @@ namespace WebUnitsApiRipper.Util
         {
             int argb = Int32.Parse(color.Replace("#", ""), NumberStyles.HexNumber);
             return Color.FromArgb(argb);
+        }
+    }
+
+    public static class IEnumerableUtil
+    {
+        public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<TValue> ienum, Func<TValue, TKey> keySelector)
+        {
+            var dic = new Dictionary<TKey, TValue>();
+            foreach (var item in ienum)
+            {
+                var key = keySelector(item);
+                if (!dic.ContainsKey(key))
+                    dic.Add(key, item);
+            }
+            return dic;
         }
     }
 }
