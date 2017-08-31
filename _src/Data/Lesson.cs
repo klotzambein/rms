@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using WebUnitsApiRipper.Util;
 
 namespace WebUnitsApiRipper.Data
@@ -24,7 +25,7 @@ namespace WebUnitsApiRipper.Data
             CellState = cellState;
         }
 
-        public Lesson(JsonClassesStage2.Entry legacyCource, List<LessonInfo> allInfos)
+        public Lesson(JsonClassesStage2.Entry legacyCource, IEnumerable<LessonInfo> allInfos)
         {
             Text = "";
             if (legacyCource.lessonText != null) Text += $"lessonText={legacyCource.lessonText}\n";
@@ -32,7 +33,7 @@ namespace WebUnitsApiRipper.Data
             if (legacyCource.lessonCode != null) Text += $"lessonCode={legacyCource.lessonCode}\n";
             if (legacyCource.cellState != null) Text += $"cellState={legacyCource.cellState}\n";
 
-            Infos = allInfos.FindAll(i => legacyCource.elements.Exists(e => e.type == i.Type && e.id == i.Id));
+            Infos = allInfos.Where(i => legacyCource.elements.Exists(e => e.type == i.Type && e.id == i.Id)).ToList();
 
             Start = new DateTime(legacyCource.date / 10000, (legacyCource.date / 100) % 100, legacyCource.date % 100, legacyCource.startTime / 100, legacyCource.startTime % 100, 0);
 

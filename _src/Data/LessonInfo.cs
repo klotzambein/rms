@@ -46,5 +46,6 @@ namespace WebUnitsApiRipper.Data
         public List<Color> Colors { get; }
         public int Id { get; }
         public int Type { get; }
+        public long Key { get => (long)Id + (long)Type << 32; }
     }
 }

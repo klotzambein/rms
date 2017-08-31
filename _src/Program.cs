@@ -15,6 +15,9 @@ namespace WebUnitsApiRipper
             var s2 = ripper.Stage2Object(169, DateTime.Now, 8);
             var entrys = s2.result.data.elementPeriods.Values.First();
             var groups1 = entrys.GroupBy(e => e.cellState);
+            var groups2 = s2.result.data.elements
+                .GroupBy(e => e.id)
+                .Where(e => e.Count() > 1);
         }
     }
 }

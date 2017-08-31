@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using IntervalArray;
 using WebUnitsApiRipper.Data;
 
 namespace WebUnitsApiRipper.Util
@@ -52,18 +53,20 @@ namespace WebUnitsApiRipper.Util
         }
     }
 
-    public static class IEnumerableUtil
+    public static class ExtensionUtil
     {
-        public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<TValue> ienum, Func<TValue, TKey> keySelector)
+        public static Dictionary<TKey, TValue> ToDictNoDups<TKey, TValue>(this IEnumerable<TValue> ienum, Func<TValue, TKey> keySelector)
         {
-            var dic = new Dictionary<TKey, TValue>();
+            var dict = new Dictionary<TKey, TValue>();
             foreach (var item in ienum)
             {
                 var key = keySelector(item);
-                if (!dic.ContainsKey(key))
-                    dic.Add(key, item);
+                if (!dict.ContainsKey(key))
+                    dict.Add(key, item);
             }
-            return dic;
+            return dict;
         }
+
+        public static Interval<DateTime> GetInterval(this Lesson lesson) => new Interval<DateTime>(lesson.Start, lesson.Start.AddMinutes(lesson.Duration));
     }
 }
