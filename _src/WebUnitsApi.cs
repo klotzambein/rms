@@ -13,14 +13,13 @@ using WebUnits.Data;
 
 namespace WebUnits
 {
-
-    public class Ripper
+    public class WebUnitsApi
     {
         private readonly string loginCookies;
 
-        public Ripper()
+        public WebUnitsApi()
         {
-            loginCookies = GetLoginCoockies();
+            loginCookies = GetLoginCookies();
         }
 
         public string Stage1String(int filter_departmentId = -1, int formatId = 8)
@@ -112,7 +111,7 @@ namespace WebUnits
             return text;
         }
 
-        private static string GetLoginCoockies(string school = "hh5849")
+        private static string GetLoginCookies(string school = "hh5849")
         {
             //data
             var data = $"login_url=%2Flogin.do&school={school}";
@@ -132,7 +131,7 @@ namespace WebUnits
             WebResponse wr = null;
             try { wr = request.GetResponse(); } catch (WebException e) { wr = e.Response; };
 
-            //Get the coockies
+            //Get the cookies
             var cookieHeader = wr.Headers["Set-Cookie"];
             var cookies = "";
             var cookieSet = new HashSet<string>();

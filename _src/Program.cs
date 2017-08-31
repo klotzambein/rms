@@ -12,7 +12,7 @@ namespace WebUnits
     {
         static void Main(string[] args)
         {
-            var ripper = new Ripper();
+            var ripper = new WebUnitsApi();
             var s1 = ripper.Stage1Object();
             var deps = s1.filters[0].elements.Select(e => new Department(e))
                                              .ToList();

@@ -50,7 +50,7 @@ namespace WebUnits.Data
                     case "substitution": IsSubstitution = @is.Value; break;
                     case "event": IsEvent = @is.Value; break;
                     default:
-                        SendEmail.SendNote("New Is*", $"Is{@is.Key[0].ToString().ToUpper() + @is.Key.Substring(1)} is not a Variable.");
+                        Logger.SendEmail("New Is*", $"Is{@is.Key[0].ToString().ToUpper() + @is.Key.Substring(1)} is not a Variable.");
                         break;
                 }
 

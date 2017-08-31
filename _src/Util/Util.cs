@@ -15,7 +15,7 @@ namespace WebUnits.Util
         {
             if (!Enum.IsDefined(typeof(CourseCode), code))
             {
-                SendEmail.SendNote("New CourseCode", $"The Code {code} is not in the {nameof(CourseCode)} enum.");
+                Logger.SendEmail("New CourseCode", $"The Code {code} is not in the {nameof(CourseCode)} enum.");
                 return CourseCode.Unknown;
             }
             return (CourseCode)code;
@@ -28,7 +28,7 @@ namespace WebUnits.Util
                 case "UNTIS_ADDITIONAL": return LessonCode.UNTIS_ADDITIONAL;
                 case "UNTIS_LESSON": return LessonCode.UNTIS_LESSON;
                 default:
-                    SendEmail.SendNote("New LessonCode", $"The Code {code} is not in the {nameof(LessonCode)} enum.");
+                    Logger.SendEmail("New LessonCode", $"The Code {code} is not in the {nameof(LessonCode)} enum.");
                     return LessonCode.Unknown;
             }
         }
@@ -42,7 +42,7 @@ namespace WebUnits.Util
                 case "CANCEL": return CellState.CANCEL;
                 case "SUBSTITUTION": return CellState.SUBSTITUTION;
                 default:
-                    SendEmail.SendNote("New CellState", $"The State {state} is not in the {nameof(CellState)} enum.");
+                    Logger.SendEmail("New CellState", $"The State {state} is not in the {nameof(CellState)} enum.");
                     return CellState.Unknown;
             }
         }
