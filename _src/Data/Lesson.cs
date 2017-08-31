@@ -44,10 +44,13 @@ namespace WebUnitsApiRipper.Data
             foreach (var @is in legacyCource.@is)
                 switch (@is.Key)
                 {
-                    case "standars": IsStandard = @is.Value; break;
+                    case "standard": IsStandard = @is.Value; break;
+                    case "additional": IsAdditional = @is.Value; break;
+                    case "cancelled": IsCancelled = @is.Value; break;
+                    case "substitution": IsSubstitution = @is.Value; break;
                     case "event": IsEvent = @is.Value; break;
                     default:
-                        SendEmail.SendNote("New Is*", $"Is{@is.Key[0].ToString().ToUpper() + @is.Key.Substring(1)} is not a Variable.\n\n{File.ReadAllText("tmp.txt")}");
+                        SendEmail.SendNote("New Is*", $"Is{@is.Key[0].ToString().ToUpper() + @is.Key.Substring(1)} is not a Variable.");
                         break;
                 }
 
@@ -66,10 +69,13 @@ namespace WebUnitsApiRipper.Data
         public CourseCode Code { get; }
         public bool IsStandard { get; }
         public bool IsEvent { get; }
+        public bool IsCancelled { get; }
+        public bool IsAdditional { get; }
         public int Id { get; }
         public int LessonId { get; }
         public int LessonNumber { get; }
         public LessonCode LessonCode { get; }
         public CellState CellState { get; }
+        public bool IsSubstitution { get; }
     }
 }
