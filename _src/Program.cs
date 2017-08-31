@@ -3,22 +3,25 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using IntervalArray;
-using WebUnitsApiRipper.Data;
+using WebUnits.Data;
+using WebUnits.Util;
 
-namespace WebUnitsApiRipper
+namespace WebUnits
 {
     class Program
     {
         static void Main(string[] args)
         {
             var ripper = new Ripper();
-            var s1 = ripper.Stage1Object(8, -1);
+            var s1 = ripper.Stage1Object();
             var deps = s1.filters[0].elements.Select(e => new Department(e))
                                              .ToList();
-            var c = new Class(s1.elements.Find(e => e.name == "12.4"), deps);
+            var classes = s1.elements.Select(e => new Class(e, deps))
+                                     .FilterAdvanced(teacherFilter: "Hob");
 
-            var s2 = ripper.Stage2Object(c.Id, DateTime.Now, 8);
-            var t = new Timetable(c, s2.result);
+            var @class = classes.First();
+            var s2 = ripper.Stage2Object(@class, DateTime.Now);
+            var t = new Timetable(@class, s2.result);
         }
     }
 }

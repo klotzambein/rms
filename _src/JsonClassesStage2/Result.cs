@@ -1,5 +1,5 @@
 
-namespace WebUnitsApiRipper.JsonClassesStage2
+namespace WebUnits.JsonClassesStage2
 {
     public class Result
     {

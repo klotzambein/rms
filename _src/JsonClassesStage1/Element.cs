@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using WebUnitsApiRipper.Data;
+using WebUnits.Data;
 
-namespace WebUnitsApiRipper.JsonClassesStage1
+namespace WebUnits.JsonClassesStage1
 {
     public class Element
     {

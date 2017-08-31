@@ -1,4 +1,4 @@
-namespace WebUnitsApiRipper.Data
+namespace WebUnits.Data
 {
     public enum CellState
     {

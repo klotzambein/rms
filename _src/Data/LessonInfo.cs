@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Drawing;
-using WebUnitsApiRipper.Util;
+using WebUnits.Util;
 
-namespace WebUnitsApiRipper.Data
+namespace WebUnits.Data
 {
     public class LessonInfo
     {

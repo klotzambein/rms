@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using IntervalArray;
-using WebUnitsApiRipper.Util;
+using WebUnits.Util;
 
-namespace WebUnitsApiRipper.Data
+namespace WebUnits.Data
 {
     public class Timetable
     {

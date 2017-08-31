@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace WebUnitsApiRipper.JsonClassesStage1
+namespace WebUnits.JsonClassesStage1
 {
     public class RootObject
     {

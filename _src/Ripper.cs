@@ -9,8 +9,9 @@ using System.Text.RegularExpressions;
 using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using WebUnits.Data;
 
-namespace WebUnitsApiRipper
+namespace WebUnits
 {
 
     public class Ripper
@@ -22,7 +23,7 @@ namespace WebUnitsApiRipper
             loginCookies = GetLoginCoockies();
         }
 
-        public string Stage1String(int formatId, int filter_departmentId = -1)
+        public string Stage1String(int filter_departmentId = -1, int formatId = 8)
         {
             var query = new Dictionary<string, string>()
             {
@@ -52,7 +53,7 @@ namespace WebUnitsApiRipper
                 this.departmentId = departmentId;
             }
         }
-        public string Stage2String(int elementId, DateTime date, int formatId, Stage2Filter filter = null)
+        public string Stage2String(int elementId, DateTime date, Stage2Filter filter = null, int formatId = 8)
         {
             if (filter == null)
                 filter = new Stage2Filter();
@@ -72,13 +73,21 @@ namespace WebUnitsApiRipper
             };
             return RequestData(query, loginCookies);
         }
-        public JsonClassesStage1.RootObject Stage1Object(int formatId, int filter_departmentId = -1)
+        public JsonClassesStage1.RootObject Stage1Object(int filter_departmentId = -1)
         {
-            return JsonConvert.DeserializeObject<JsonClassesStage1.RootObject>(Stage1String(formatId, filter_departmentId));
+            return JsonConvert.DeserializeObject<JsonClassesStage1.RootObject>(Stage1String(filter_departmentId));
         }
-        public JsonClassesStage2.RootObject Stage2Object(int elementId, DateTime date, int formatId, Stage2Filter filter = null)
+        public JsonClassesStage1.RootObject Stage1Object(Department departmentFilter)
         {
-            return JsonConvert.DeserializeObject<JsonClassesStage2.RootObject>(Stage2String(elementId, date, formatId, filter));
+            return JsonConvert.DeserializeObject<JsonClassesStage1.RootObject>(Stage1String(departmentFilter.Id));
+        }
+        public JsonClassesStage2.RootObject Stage2Object(int elementId, DateTime date, Stage2Filter filter = null)
+        {
+            return JsonConvert.DeserializeObject<JsonClassesStage2.RootObject>(Stage2String(elementId, date, filter));
+        }
+        public JsonClassesStage2.RootObject Stage2Object(Class @class, DateTime date, Stage2Filter filter = null)
+        {
+            return JsonConvert.DeserializeObject<JsonClassesStage2.RootObject>(Stage2String(@class.Id, date, filter));
         }
 
         private static string RequestData(Dictionary<string, string> query, string cookieLogin)

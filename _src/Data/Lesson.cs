@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using WebUnitsApiRipper.Util;
+using WebUnits.Util;
 
-namespace WebUnitsApiRipper.Data
+namespace WebUnits.Data
 {
     public class Lesson
     {

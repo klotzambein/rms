@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 
-namespace WebUnitsApiRipper.Util
+namespace WebUnits.Util
 {
     public class SendEmail
     {

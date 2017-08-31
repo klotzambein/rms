@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace WebUnitsApiRipper.Data
+namespace WebUnits.Data
 {
     public class Class
     {

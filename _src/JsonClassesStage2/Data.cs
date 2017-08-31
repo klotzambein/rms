@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace WebUnitsApiRipper.JsonClassesStage2
+namespace WebUnits.JsonClassesStage2
 {
     public class Data
     {
