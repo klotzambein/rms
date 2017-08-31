@@ -32,7 +32,7 @@ namespace WebUnitsApiRipper.Data
 
         private void AddName(string name)
         {
-            if (name == null)
+            if (string.IsNullOrEmpty(name))
                 return;
             name = name.Trim();
             if (Name == null)
