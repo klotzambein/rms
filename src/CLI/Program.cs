@@ -8,15 +8,17 @@ namespace CLI
 {
     class Program
     {
-
         static void Main(string[] args)
         {
-            if (args.Length > 0 && args[0] == "timetable")
+            if (args.Length > 0 && (args[0] == "timetable" || args[0] == "t"))
                 Timetable(args.Skip(1).ToArray());
-            else if (args.Length > 0 && args[0] == "classes")
+            else if (args.Length > 0 && (args[0] == "classes" || args[0] == "c"))
                 Classes(args.Skip(1).ToArray());
             else
-                Console.Error.WriteLine("Command usage: webuntis timetable|classes");
+                Console.Error.WriteLine(@"
+Command usage: 
+    'webuntis timetable|t' => display weekly timetable
+    'webuntis classes|c' => display all classes");
         }
 
         private static void Classes(string[] args)
