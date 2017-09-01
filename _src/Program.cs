@@ -12,10 +12,8 @@ namespace WebUnits
     {
         static void Main(string[] args)
         {
-            PhpApi.auth("stundenplan.hamburg.de", "hh5849");
-            return;
             var ripper = new WebUnitsApi();
-            var s1 = ripper.Stage1Object();
+            var s1 = ripper.Stage1Object(7);
             var deps = s1.filters[0].elements.Select(e => new Department(e))
                                              .ToList();
             var classes = s1.elements.Select(e => new Class(e, deps))
@@ -23,7 +21,7 @@ namespace WebUnits
 
             var @class = classes.First();
             var s2 = ripper.Stage2Object(@class, DateTime.Now);
-            var t = new Timetable(@class, s2.result);
+            var t = new TimeTable(@class, s2.result);
         }
     }
 }

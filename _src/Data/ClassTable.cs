@@ -6,9 +6,9 @@ using WebUnits.Util;
 
 namespace WebUnits.Data
 {
-    public class TimeTable
+    public class ClassTable
     {
-        public TimeTable(DateTime timeStamp, Class activeClass, IntervalTree<DateTime, Lesson> lessons, Dictionary<long, LessonInfo> infos)
+        /*public ClassTable(DateTime timeStamp, Class activeClass, IntervalTree<DateTime, Lesson> lessons, Dictionary<long, LessonInfo> infos)
         {
             TimeStamp = timeStamp;
             ActiveClass = activeClass;
@@ -16,11 +16,11 @@ namespace WebUnits.Data
             Infos = infos;
         }
 
-        public TimeTable(Class activeClass, JsonClassesStage2.Result result)
+        public ClassTable(Class activeClass, JsonClassesStage1.RootObject result)
         {
             TimeStamp = DateTimeOffset.FromUnixTimeMilliseconds(result.lastImportTimestamp).DateTime;
 
-            ActiveClass = activeClass;
+            ActiveDepartment = re;
 
             Infos = result.data.elements
                 .Select(e => new LessonInfo(e))
@@ -38,12 +38,10 @@ namespace WebUnits.Data
                 }
             }
         }
-
+*/
         public DateTime TimeStamp { get; }
-        public Class ActiveClass { get; }
-        public IntervalTree<DateTime, Lesson> Lessons { get; }
-        public Dictionary<long, LessonInfo> Infos { get; }
-
-
+        public Department ActiveDepartment { get; }
+        public Dictionary<long, Class> Classes { get; }
+        public Dictionary<long, Department> Departments { get; }
     }
 }

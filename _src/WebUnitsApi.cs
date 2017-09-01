@@ -22,7 +22,24 @@ namespace WebUnits
             loginCookies = GetLoginCookies();
         }
 
-        public string Stage1String(int filter_departmentId = -1, int formatId = 8)
+        public JsonClassesStage1.RootObject Stage1Object(int filter_departmentId = -1)
+        {
+            return JsonConvert.DeserializeObject<JsonClassesStage1.RootObject>(Stage1String(loginCookies, filter_departmentId));
+        }
+        public JsonClassesStage1.RootObject Stage1Object(Department departmentFilter)
+        {
+            return JsonConvert.DeserializeObject<JsonClassesStage1.RootObject>(Stage1String(loginCookies, departmentFilter.Id));
+        }
+        public JsonClassesStage2.RootObject Stage2Object(int elementId, DateTime date, Stage2Filter filter = null)
+        {
+            return JsonConvert.DeserializeObject<JsonClassesStage2.RootObject>(Stage2String(loginCookies, elementId, date, filter));
+        }
+        public JsonClassesStage2.RootObject Stage2Object(Class @class, DateTime date, Stage2Filter filter = null)
+        {
+            return JsonConvert.DeserializeObject<JsonClassesStage2.RootObject>(Stage2String(loginCookies, @class.Id, date, filter));
+        }
+
+        public static string Stage1String(string loginCookies, int filter_departmentId = -1, int formatId = 8)
         {
             var query = new Dictionary<string, string>()
             {
@@ -52,7 +69,7 @@ namespace WebUnits
                 this.departmentId = departmentId;
             }
         }
-        public string Stage2String(int elementId, DateTime date, Stage2Filter filter = null, int formatId = 8)
+        public static string Stage2String(string loginCookies, int elementId, DateTime date, Stage2Filter filter = null, int formatId = 8)
         {
             if (filter == null)
                 filter = new Stage2Filter();
@@ -71,22 +88,6 @@ namespace WebUnits
                 { "formatId",                      formatId.ToString() }
             };
             return RequestData(query, loginCookies);
-        }
-        public JsonClassesStage1.RootObject Stage1Object(int filter_departmentId = -1)
-        {
-            return JsonConvert.DeserializeObject<JsonClassesStage1.RootObject>(Stage1String(filter_departmentId));
-        }
-        public JsonClassesStage1.RootObject Stage1Object(Department departmentFilter)
-        {
-            return JsonConvert.DeserializeObject<JsonClassesStage1.RootObject>(Stage1String(departmentFilter.Id));
-        }
-        public JsonClassesStage2.RootObject Stage2Object(int elementId, DateTime date, Stage2Filter filter = null)
-        {
-            return JsonConvert.DeserializeObject<JsonClassesStage2.RootObject>(Stage2String(elementId, date, filter));
-        }
-        public JsonClassesStage2.RootObject Stage2Object(Class @class, DateTime date, Stage2Filter filter = null)
-        {
-            return JsonConvert.DeserializeObject<JsonClassesStage2.RootObject>(Stage2String(@class.Id, date, filter));
         }
 
         private static string RequestData(Dictionary<string, string> query, string cookieLogin)
