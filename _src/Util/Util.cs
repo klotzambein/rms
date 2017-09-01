@@ -144,6 +144,11 @@ namespace WebUnits.Util
 
         }
 
+        public static bool HasProperty(this object dyn, string name)
+        {
+            return dyn.GetType().GetProperties().Where(p => p.Name.Equals(name)).Any();
+        }
+
         public static Interval<DateTime> GetInterval(this Lesson lesson) => new Interval<DateTime>(lesson.Start, lesson.Start.AddMinutes(lesson.Duration));
     }
 }

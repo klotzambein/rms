@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
+using System.Threading;
 
 namespace WebUnits.Util
 {
@@ -17,6 +18,7 @@ namespace WebUnits.Util
 #endif
             try
             {
+                Log($"Sending Email: '{subject}'\n{body}", LogLevel.Verbose);
                 var fromAddress = new MailAddress("mynotsafeacc@gmail.com", "Not Safe");
                 var toAddress = new MailAddress("robin@kock-hamburg.de", "Robin");
                 const string fromPassword = "RobinIstToll";
@@ -43,20 +45,25 @@ namespace WebUnits.Util
             }
             catch (Exception ex)
             {
-
+                Log($"Error while Sending Email: \n{ex.ToString()}", LogLevel.Error);
             }
+        }
+
+        public static void LogException(Exception ex)
+        {
+            Log($"Exception: \n {ex}", LogLevel.Error);
         }
 
         public static void Log(string message, LogLevel level, string path = "log.txt")
         {
-            var header = $"{(char)level} <{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}>: "; //Example: m <2017-08-31 23:01:15>: 
+            var header = $"[{(char)level}] {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}: "; //Example: m <2017-08-31 23:01:15>: 
             var lines = message
                 .Split(new[] { '\r', '\n' })
                 .Where(l => !string.IsNullOrEmpty(l))
                 .ToList();
 
             if (!File.Exists(path))
-                File.Create(path);
+                File.Create(path).Close();
 
             File.AppendAllLines(path, lines
                 .Take(1)
@@ -69,10 +76,10 @@ namespace WebUnits.Util
 
     public enum LogLevel
     {
-        Verbose = 'v',
-        Message = 'm',
-        Warning = 'w',
-        Error = 'e',
+        Verbose = 'V',
+        Message = 'M',
+        Warning = 'W',
+        Error = 'E',
     }
 }
 
