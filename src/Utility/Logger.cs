@@ -36,7 +36,7 @@ namespace Utility
                     using (var message = new MailMessage(fromAddress, toAddress)
                     {
                         Subject = "WebUnits: " + subject,
-                        Body = body + "\n\n" + File.ReadAllText("tmp.json")
+                        Body = body + "\n\n" + (File.Exists("tmp.json") ? File.ReadAllText("tmp.json") : "[Error 404: File not found]")
                     })
                     {
                         smtp.Send(message);

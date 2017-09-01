@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace WebUntis.Data
 {
@@ -47,5 +48,10 @@ namespace WebUntis.Data
         public string Name { get; private set; }
         public List<string> AltNames { get; }
         public List<Department> Deps { get; }
+
+        public override string ToString()
+        {
+            return $"<{Name}:{string.Join(",", Teachers.Select(t => $"'{(t.name.Length > t.name.Length ? t.name : t.longName)}'"))},{string.Join(",", Deps.Select(d => $"'{d.Name}'"))}>";
+        }
     }
 }
