@@ -1,4 +1,4 @@
-namespace WebUnits.Data
+namespace WebUntis.Data
 {
     public enum CourseCode
     {

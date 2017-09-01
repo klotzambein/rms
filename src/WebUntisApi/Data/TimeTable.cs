@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using IntervalArray;
-using WebUnits.Util;
+using Utility.IntervalArray;
+using Utility;
 
-namespace WebUnits.Data
+namespace WebUntis.Data
 {
     public class TimeTable
     {

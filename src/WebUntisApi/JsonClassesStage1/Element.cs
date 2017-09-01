@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using WebUnits.Data;
+using WebUntis.Data;
 
-namespace WebUnits.JsonClassesStage1
+namespace WebUntis.JsonClassesStage1
 {
     public class Element
     {

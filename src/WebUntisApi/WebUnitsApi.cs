@@ -9,17 +9,17 @@ using System.Text.RegularExpressions;
 using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using WebUnits.Data;
-using WebUnits.Util;
+using WebUntis.Data;
+using Utility;
 
-namespace WebUnits
+namespace WebUntis
 {
-    public class WebUnitsApi
+    public class WebUntisApi
     {
         private readonly string loginCookies;
         private readonly object url;
 
-        public WebUnitsApi(string url, string school)
+        public WebUntisApi(string url, string school)
         {
             this.url = url;
             loginCookies = GetLoginCookies(school);

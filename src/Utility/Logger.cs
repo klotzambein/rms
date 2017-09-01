@@ -7,7 +7,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading;
 
-namespace WebUnits.Util
+namespace Utility
 {
     public class Logger
     {

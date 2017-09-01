@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using WebUnits.Util;
+using Utility;
+using static WebUntis.WebUntisUtil;
 
-namespace WebUnits.Data
+namespace WebUntis.Data
 {
     public class Lesson
     {
@@ -57,9 +58,9 @@ namespace WebUnits.Data
             Id = legacyCource.id;
             LessonId = legacyCource.lessonId;
             LessonNumber = legacyCource.lessonNumber;
-            LessonCode = ParseUtil.ParseLessonCode(legacyCource.lessonCode);
-            Code = ParseUtil.ParseCourseCode(legacyCource.code);
-            CellState = ParseUtil.ParseCellState(legacyCource.cellState);
+            LessonCode = ParseLessonCode(legacyCource.lessonCode);
+            Code = ParseCourseCode(legacyCource.code);
+            CellState = ParseCellState(legacyCource.cellState);
         }
         public string Text { get; }
         public List<LessonInfo> Infos { get; }

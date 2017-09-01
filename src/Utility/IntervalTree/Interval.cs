@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace IntervalArray
+namespace Utility.IntervalArray
 {
     /// <summary>
     /// Representation of bounded interval

@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
-namespace IntervalArray
+namespace Utility.IntervalArray
 {
 
     /// <summary>
@@ -24,7 +25,7 @@ namespace IntervalArray
         /// The interval this node holds
         /// </summary>
         public Interval<TKey> Interval;
-        public TValue Value;
+        public OneItemLList<TValue> Values;
 
         private NodeColor color;
         /// <summary>
@@ -36,7 +37,7 @@ namespace IntervalArray
             set { this.color = value; }
         }
 
-        public IntervalNode()
+        private IntervalNode()
         {
             Parent = Left = Right = IntervalTree<TKey, TValue>.Sentinel;
             Color = NodeColor.BLACK;
@@ -46,7 +47,13 @@ namespace IntervalArray
         {
             MaxEnd = interval.End;
             Interval = interval;
-            Value = value;
+            Values = new OneItemLList<TValue>(value);
+        }
+        public IntervalNode(Interval<TKey> interval, IEnumerable<TValue> values) : this()
+        {
+            MaxEnd = interval.End;
+            Interval = interval;
+            Values = new OneItemLList<TValue>(values);
         }
 
         /// <summary>

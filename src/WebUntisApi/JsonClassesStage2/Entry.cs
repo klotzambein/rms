@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 
 
-namespace WebUnits.JsonClassesStage2
+namespace WebUntis.JsonClassesStage2
 {
     public class Entry
     {

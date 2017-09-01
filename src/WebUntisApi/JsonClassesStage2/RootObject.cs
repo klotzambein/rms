@@ -1,4 +1,4 @@
-namespace WebUnits.JsonClassesStage2
+namespace WebUntis.JsonClassesStage2
 {
     public class RootObject
     {

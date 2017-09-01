@@ -4,12 +4,13 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using IntervalArray;
-using WebUnits.Data;
+using Utility;
+using Utility.IntervalArray;
+using WebUntis.Data;
 
-namespace WebUnits.Util
+namespace WebUntis
 {
-    public static class ParseUtil
+    internal static class WebUntisUtil
     {
         public static CourseCode ParseCourseCode(int code)
         {
@@ -54,7 +55,7 @@ namespace WebUnits.Util
         }
     }
 
-    public static class ExtensionUtil
+    internal static class ExtensionUtil
     {
         public static Dictionary<TKey, TValue> ToDictNoDups<TKey, TValue>(this IEnumerable<TValue> ienum, Func<TValue, TKey> keySelector)
         {

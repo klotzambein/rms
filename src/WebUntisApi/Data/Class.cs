@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace WebUnits.Data
+namespace WebUntis.Data
 {
     public class Class
     {

@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Drawing;
-using WebUnits.Util;
+using Utility;
+using static WebUntis.WebUntisUtil;
 
-namespace WebUnits.Data
+namespace WebUntis.Data
 {
     public class LessonInfo
     {
@@ -23,8 +24,8 @@ namespace WebUnits.Data
             AddName(legacyCourceInfo.displayname);
 
             Colors = new List<Color>();
-            if (!string.IsNullOrEmpty(legacyCourceInfo.backColor)) Colors.Add(ParseUtil.ParseColor(legacyCourceInfo.backColor));
-            if (!string.IsNullOrEmpty(legacyCourceInfo.foreColor)) Colors.Add(ParseUtil.ParseColor(legacyCourceInfo.foreColor));
+            if (!string.IsNullOrEmpty(legacyCourceInfo.backColor)) Colors.Add(ParseColor(legacyCourceInfo.backColor));
+            if (!string.IsNullOrEmpty(legacyCourceInfo.foreColor)) Colors.Add(ParseColor(legacyCourceInfo.foreColor));
 
             Id = legacyCourceInfo.id;
             Type = legacyCourceInfo.type;

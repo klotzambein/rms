@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace WebUnits.JsonClassesStage1
+namespace WebUntis.JsonClassesStage1
 {
     public class RootObject
     {

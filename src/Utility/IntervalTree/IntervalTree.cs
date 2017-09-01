@@ -3,21 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace IntervalArray
+namespace Utility.IntervalArray
 {
     /// <summary>
     /// Tree capable of adding arbitrary intervals and performing search queries on them
     /// </summary>
-    public partial class IntervalTree<TKey, TValue> : IEnumerable<KeyValuePair<Interval<TKey>, TValue>> where TKey : struct, IComparable<TKey>
+    public partial class IntervalTree<TKey, TValue> : IEnumerable<KeyValuePair<Interval<TKey>, IEnumerable<TValue>>> where TKey : struct, IComparable<TKey>
     {
 
         internal static IntervalNode<TKey, TValue> Sentinel = new IntervalNode<TKey, TValue>(new Interval<TKey>(), default(TValue));
 
-        IntervalNode<TKey, TValue> Root
-        {
-            get;
-            set;
-        }
+        IntervalNode<TKey, TValue> Root { get; set; }
 
         public IntervalTree()
         {
@@ -57,7 +53,7 @@ namespace IntervalArray
         /// </summary>
         /// <param name="i"></param>
         /// <returns></returns>
-        public KeyValuePair<Interval<TKey>, TValue> SearchFirstOverlapping(Interval<TKey> i)
+        public KeyValuePair<Interval<TKey>, IEnumerable<TValue>> SearchFirstOverlapping(Interval<TKey> i)
         {
             var node = Root;
 
@@ -78,7 +74,7 @@ namespace IntervalArray
                 throw new KeyNotFoundException("No overlapping interval found.");
             }
 
-            return KeyValuePair.Create(node.Interval, node.Value);
+            return new KeyValuePair<Interval<TKey>, IEnumerable<TValue>>(node.Interval, node.Values);
         }
 
         private void SearchSubtree(IntervalNode<TKey, TValue> node, Interval<TKey> i, List<KeyValuePair<Interval<TKey>, TValue>> result)
@@ -95,7 +91,8 @@ namespace IntervalArray
 
             if (i.Overlaps(node.Interval))
             {
-                result.Add(KeyValuePair.Create(node.Interval, node.Value));
+                foreach (var v in node.Values)
+                    result.Add(new KeyValuePair<Interval<TKey>, TValue>(node.Interval, v));
             }
 
             // Interval start is greater than largest endpoint in this subtree
@@ -160,7 +157,8 @@ namespace IntervalArray
 
             if (node.Interval.Contains(val))
             {
-                result.Add(KeyValuePair.Create(node.Interval, node.Value));
+                foreach (var v in node.Values)
+                    result.Add(new KeyValuePair<Interval<TKey>, TValue>(node.Interval, v));
             }
 
             if (val.CompareTo(node.Interval.Start) < 0)
@@ -237,6 +235,7 @@ namespace IntervalArray
             }
             else
             {
+                currentNode.Values.AddFirst(value);
                 return;
             }
 
@@ -539,7 +538,7 @@ namespace IntervalArray
         }
 
         #region Enumerators
-        private IEnumerable<KeyValuePair<Interval<TKey>, TValue>> InOrderWalk(IntervalNode<TKey, TValue> node)
+        private IEnumerable<KeyValuePair<Interval<TKey>, IEnumerable<TValue>>> InOrderWalk(IntervalNode<TKey, TValue> node)
         {
             if (node.Left != Sentinel)
             {
@@ -551,7 +550,7 @@ namespace IntervalArray
 
             if (node != Sentinel)
             {
-                yield return KeyValuePair.Create(node.Interval, node.Value);
+                yield return new KeyValuePair<Interval<TKey>, IEnumerable<TValue>>(node.Interval, node.Values);
             }
 
             if (node.Right != Sentinel)
@@ -563,7 +562,7 @@ namespace IntervalArray
             }
         }
 
-        public IEnumerator<KeyValuePair<Interval<TKey>, TValue>> GetEnumerator()
+        public IEnumerator<KeyValuePair<Interval<TKey>, IEnumerable<TValue>>> GetEnumerator()
         {
             foreach (var val in InOrderWalk(Root))
             {
