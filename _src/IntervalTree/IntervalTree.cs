@@ -8,7 +8,7 @@ namespace IntervalArray
     /// <summary>
     /// Tree capable of adding arbitrary intervals and performing search queries on them
     /// </summary>
-    public partial class IntervalTree<TKey, TValue> : IEnumerable<Interval<TKey>> where TKey : struct, IComparable<TKey>
+    public partial class IntervalTree<TKey, TValue> : IEnumerable<KeyValuePair<Interval<TKey>, TValue>> where TKey : struct, IComparable<TKey>
     {
 
         internal static IntervalNode<TKey, TValue> Sentinel = new IntervalNode<TKey, TValue>(new Interval<TKey>(), default(TValue));
@@ -539,11 +539,11 @@ namespace IntervalArray
         }
 
         #region Enumerators
-        private IEnumerable<Interval<TKey>> InOrderWalk(IntervalNode<TKey, TValue> node)
+        private IEnumerable<KeyValuePair<Interval<TKey>, TValue>> InOrderWalk(IntervalNode<TKey, TValue> node)
         {
             if (node.Left != Sentinel)
             {
-                foreach (Interval<TKey> val in InOrderWalk(node.Left))
+                foreach (var val in InOrderWalk(node.Left))
                 {
                     yield return val;
                 }
@@ -551,21 +551,21 @@ namespace IntervalArray
 
             if (node != Sentinel)
             {
-                yield return node.Interval;
+                yield return KeyValuePair.Create(node.Interval, node.Value);
             }
 
             if (node.Right != Sentinel)
             {
-                foreach (Interval<TKey> val in InOrderWalk(node.Right))
+                foreach (var val in InOrderWalk(node.Right))
                 {
                     yield return val;
                 }
             }
         }
 
-        public IEnumerator<Interval<TKey>> GetEnumerator()
+        public IEnumerator<KeyValuePair<Interval<TKey>, TValue>> GetEnumerator()
         {
-            foreach (Interval<TKey> val in InOrderWalk(Root))
+            foreach (var val in InOrderWalk(Root))
             {
                 yield return val;
             }

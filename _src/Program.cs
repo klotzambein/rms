@@ -14,8 +14,7 @@ namespace WebUnits
         {
             var api = new WebUnitsApi("stundenplan.hamburg.de", "hh5849");
             var classes = api.QueryClasses();
-            var lessons = api.QueryLessons(classes.Find("mey", "12"), DateTime.Now);
-
+            var lessons = api.QueryLessons(classes.Find("mey", "12"), DateTime.Now.AddDays(3));
         }
     }
 }
