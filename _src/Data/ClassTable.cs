@@ -8,40 +8,48 @@ namespace WebUnits.Data
 {
     public class ClassTable
     {
-        /*public ClassTable(DateTime timeStamp, Class activeClass, IntervalTree<DateTime, Lesson> lessons, Dictionary<long, LessonInfo> infos)
+        public ClassTable(DateTime timeStamp, Department activeDepartment, Dictionary<int, Department> departments, Dictionary<int, Class> classes)
         {
             TimeStamp = timeStamp;
-            ActiveClass = activeClass;
-            Lessons = lessons;
-            Infos = infos;
+            ActiveDepartment = activeDepartment;
+            Departments = departments;
+            Classes = classes;
         }
 
-        public ClassTable(Class activeClass, JsonClassesStage1.RootObject result)
+        public ClassTable(JsonClassesStage1.RootObject result)
         {
             TimeStamp = DateTimeOffset.FromUnixTimeMilliseconds(result.lastImportTimestamp).DateTime;
 
-            ActiveDepartment = re;
+            var depList = result.filters[0].elements
+                .Select(e => new Department(e))
+                .ToList();
 
-            Infos = result.data.elements
-                .Select(e => new LessonInfo(e))
-                .ToDictNoDups(e => e.Key);
+            if (result.filters[0].selected >= 0)
+                ActiveDepartment = Departments[result.filters[0].selected];
 
-            Lessons = new IntervalTree<DateTime, Lesson>();
-            if (result.data.elementPeriods.ContainsKey(activeClass.Id.ToString()))
-            {
-                var infos = Infos.Select(e => e.Value);
-                var lessons = result.data.elementPeriods[activeClass.Id.ToString()];
-                foreach (var l in lessons)
-                {
-                    var newLesson = new Lesson(l, infos);
-                    Lessons.Add(newLesson.GetInterval(), newLesson);
-                }
-            }
+            Departments = depList
+                .ToDictNoDups(d => d.Id);
+
+            Classes = result.elements
+                .Select(e => new Class(e, depList))
+                .ToDictNoDups(c => c.Id);
         }
-*/
+
+        public IEnumerable<Class> FindAll(string teacherFilter = null, string nameFilter = null, List<Department> departmentFilter = null)
+        {
+            return Classes
+                .Select(d => d.Value)
+                .FilterAdvanced(teacherFilter, nameFilter, departmentFilter);
+        }
+
+        public Class Find(string teacherFilter = null, string nameFilter = null, List<Department> departmentFilter = null)
+        {
+            return FindAll(teacherFilter, nameFilter, departmentFilter).FirstOrDefault();
+        }
+
         public DateTime TimeStamp { get; }
         public Department ActiveDepartment { get; }
-        public Dictionary<long, Class> Classes { get; }
-        public Dictionary<long, Department> Departments { get; }
+        public Dictionary<int, Department> Departments { get; }
+        public Dictionary<int, Class> Classes { get; }
     }
 }

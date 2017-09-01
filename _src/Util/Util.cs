@@ -68,7 +68,7 @@ namespace WebUnits.Util
             return dict;
         }
 
-        public static List<Class> FilterAdvanced(this IEnumerable<Class> classes, string teacherFilter = null, string nameFilter = null, List<Department> departmentFilter = null)
+        public static IEnumerable<Class> FilterAdvanced(this IEnumerable<Class> classes, string teacherFilter = null, string nameFilter = null, List<Department> departmentFilter = null)
         {
             if (departmentFilter != null)
             {
@@ -114,8 +114,7 @@ namespace WebUnits.Util
 
             return sortedClasses
                 .OrderBy(t => t.Item2)
-                .Select(t => t.Item1)
-                .ToList();
+                .Select(t => t.Item1);
         }
 
         public static int MatchWith(this string str, string filter)
@@ -142,11 +141,6 @@ namespace WebUnits.Util
                 return int.MaxValue;
             return score + scoreLocal;
 
-        }
-
-        public static bool HasProperty(this object dyn, string name)
-        {
-            return dyn.GetType().GetProperties().Where(p => p.Name.Equals(name)).Any();
         }
 
         public static Interval<DateTime> GetInterval(this Lesson lesson) => new Interval<DateTime>(lesson.Start, lesson.Start.AddMinutes(lesson.Duration));

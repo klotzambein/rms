@@ -12,16 +12,10 @@ namespace WebUnits
     {
         static void Main(string[] args)
         {
-            var ripper = new WebUnitsApi();
-            var s1 = ripper.Stage1Object(7);
-            var deps = s1.filters[0].elements.Select(e => new Department(e))
-                                             .ToList();
-            var classes = s1.elements.Select(e => new Class(e, deps))
-                                     .FilterAdvanced(teacherFilter: "Hob");
+            var api = new WebUnitsApi("stundenplan.hamburg.de", "hh5849");
+            var classes = api.QueryClasses();
+            var lessons = api.QueryLessons(classes.Find("mey", "12"), DateTime.Now);
 
-            var @class = classes.First();
-            var s2 = ripper.Stage2Object(@class, DateTime.Now);
-            var t = new TimeTable(@class, s2.result);
         }
     }
 }

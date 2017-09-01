@@ -10,36 +10,65 @@ using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using WebUnits.Data;
+using WebUnits.Util;
 
 namespace WebUnits
 {
     public class WebUnitsApi
     {
         private readonly string loginCookies;
+        private readonly object url;
 
-        public WebUnitsApi()
+        public WebUnitsApi(string url, string school)
         {
-            loginCookies = GetLoginCookies();
+            this.url = url;
+            loginCookies = GetLoginCookies(school);
+        }
+
+        public ClassTable QueryClasses()
+        {
+            return QueryClasses(-1);
+        }
+        public ClassTable QueryClasses(Department filter)
+        {
+            return QueryClasses(filter.Id);
+        }
+        public ClassTable QueryClasses(int departmentFilterId)
+        {
+            var s1 = Stage1Object(departmentFilterId);
+            CheckStage1(s1);
+            return new ClassTable(s1);
+        }
+
+        public void CheckStage1(JsonClassesStage1.RootObject stage1)
+        {
+            if (stage1.filters.Count != 1)
+                Logger.SendEmail("New Stage 1 Filter", $"Stage 1 has new filter(s); New Count: {stage1.filters.Count}; Filter(s): [{stage1.filters.Skip(1).Aggregate("", (a, f) => a + f.typeLabel + ",").TrimEnd(',')}]");
+        }
+
+        public TimeTable QueryLessons(Class @class, DateTime date, Stage2Filter filter = null)
+        {
+            return new TimeTable(@class, Stage2Object(@class, date, filter).result);
         }
 
         public JsonClassesStage1.RootObject Stage1Object(int filter_departmentId = -1)
         {
-            return JsonConvert.DeserializeObject<JsonClassesStage1.RootObject>(Stage1String(loginCookies, filter_departmentId));
+            return JsonConvert.DeserializeObject<JsonClassesStage1.RootObject>(Stage1String(filter_departmentId));
         }
         public JsonClassesStage1.RootObject Stage1Object(Department departmentFilter)
         {
-            return JsonConvert.DeserializeObject<JsonClassesStage1.RootObject>(Stage1String(loginCookies, departmentFilter.Id));
+            return JsonConvert.DeserializeObject<JsonClassesStage1.RootObject>(Stage1String(departmentFilter.Id));
         }
         public JsonClassesStage2.RootObject Stage2Object(int elementId, DateTime date, Stage2Filter filter = null)
         {
-            return JsonConvert.DeserializeObject<JsonClassesStage2.RootObject>(Stage2String(loginCookies, elementId, date, filter));
+            return JsonConvert.DeserializeObject<JsonClassesStage2.RootObject>(Stage2String(elementId, date, filter));
         }
         public JsonClassesStage2.RootObject Stage2Object(Class @class, DateTime date, Stage2Filter filter = null)
         {
-            return JsonConvert.DeserializeObject<JsonClassesStage2.RootObject>(Stage2String(loginCookies, @class.Id, date, filter));
+            return JsonConvert.DeserializeObject<JsonClassesStage2.RootObject>(Stage2String(@class.Id, date, filter));
         }
 
-        public static string Stage1String(string loginCookies, int filter_departmentId = -1, int formatId = 8)
+        public string Stage1String(int filter_departmentId = -1, int formatId = 8)
         {
             var query = new Dictionary<string, string>()
             {
@@ -69,7 +98,7 @@ namespace WebUnits
                 this.departmentId = departmentId;
             }
         }
-        public static string Stage2String(string loginCookies, int elementId, DateTime date, Stage2Filter filter = null, int formatId = 8)
+        public string Stage2String(int elementId, DateTime date, Stage2Filter filter = null, int formatId = 8)
         {
             if (filter == null)
                 filter = new Stage2Filter();
@@ -90,14 +119,14 @@ namespace WebUnits
             return RequestData(query, loginCookies);
         }
 
-        private static string RequestData(Dictionary<string, string> query, string cookieLogin)
+        private string RequestData(Dictionary<string, string> query, string cookieLogin)
         {
             var data = "";
             foreach (var item in query)
                 data += $"{HttpUtility.UrlEncode(item.Key)}={HttpUtility.UrlEncode(item.Value)}&";
             data = data.TrimEnd('&');
 
-            WebRequest request = WebRequest.Create("https://stundenplan.hamburg.de/WebUntis/Timetable.do");
+            WebRequest request = WebRequest.Create($"https://{url}/WebUntis/Timetable.do");
             request.Method = "POST";
             request.Headers.Add(HttpRequestHeader.Cookie, cookieLogin);
             request.Headers.Add(HttpRequestHeader.Accept, "application/json");
@@ -112,13 +141,13 @@ namespace WebUnits
             return text;
         }
 
-        private static string GetLoginCookies(string school = "hh5849")
+        private string GetLoginCookies(string school)
         {
             //data
             var data = $"login_url=%2Flogin.do&school={school}";
 
             //Create request
-            var request = (HttpWebRequest)WebRequest.Create("https://stundenplan.hamburg.de/WebUntis/j_spring_security_check");
+            var request = (HttpWebRequest)WebRequest.Create($"https://{url}/WebUntis/j_spring_security_check");
             request.Method = "POST";
             request.ContentType = "application/x-www-form-urlencoded";
             request.AllowAutoRedirect = false;
