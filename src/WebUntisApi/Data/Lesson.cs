@@ -9,9 +9,8 @@ namespace WebUntis.Data
 {
     public class Lesson
     {
-        public Lesson(string text, List<LessonInfo> infos, DateTime start, int duration, int priority, CourseCode code, bool isStandard, bool isEvent, int id, int lessonId, int lessonNumber, LessonCode lessonCode, CellState cellState)
+        public Lesson(List<LessonInfo> infos, DateTime start, int duration, int priority, CourseCode code, bool isStandard, bool isEvent, int id, int lessonId, int lessonNumber, LessonCode lessonCode, CellState cellState, string lessonText, string periodText)
         {
-            Text = text;
             Infos = infos;
             Start = start;
             Duration = duration;
@@ -24,16 +23,12 @@ namespace WebUntis.Data
             LessonNumber = lessonNumber;
             LessonCode = lessonCode;
             CellState = cellState;
+            LessonText = lessonText;
+            PeriodText = periodText;
         }
 
         public Lesson(JsonClassesStage2.Entry legacyCource, IEnumerable<LessonInfo> allInfos)
         {
-            Text = "";
-            if (legacyCource.lessonText != null) Text += $"lessonText={legacyCource.lessonText}\n";
-            if (legacyCource.periodText != null) Text += $"periodText={legacyCource.periodText}\n";
-            if (legacyCource.lessonCode != null) Text += $"lessonCode={legacyCource.lessonCode}\n";
-            if (legacyCource.cellState != null) Text += $"cellState={legacyCource.cellState}\n";
-
             Infos = allInfos.Where(i => legacyCource.elements.Exists(e => e.type == i.Type && e.id == i.Id)).ToList();
 
             Start = new DateTime(legacyCource.date / 10000, (legacyCource.date / 100) % 100, legacyCource.date % 100, legacyCource.startTime / 100, legacyCource.startTime % 100, 0);
@@ -61,8 +56,9 @@ namespace WebUntis.Data
             LessonCode = ParseLessonCode(legacyCource.lessonCode);
             Code = ParseCourseCode(legacyCource.code);
             CellState = ParseCellState(legacyCource.cellState);
+            LessonText = legacyCource.lessonText;
+            PeriodText = legacyCource.periodText;
         }
-        public string Text { get; }
         public List<LessonInfo> Infos { get; }
         public DateTime Start { get; }
         public int Duration { get; }
@@ -77,6 +73,13 @@ namespace WebUntis.Data
         public int LessonNumber { get; }
         public LessonCode LessonCode { get; }
         public CellState CellState { get; }
+        public string LessonText { get; }
+        public string PeriodText { get; }
         public bool IsSubstitution { get; }
+
+        public override string ToString()
+        {
+            return $"<{CellState}:{string.Join(",", Infos.OrderBy(i => i.Type).Select(i => i.Name))}{(string.IsNullOrEmpty(LessonText) ? "" : ("," + LessonText))}{(string.IsNullOrEmpty(PeriodText) ? "" : ("," + PeriodText))}>";
+        }
     }
 }
