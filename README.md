@@ -5,7 +5,7 @@ Robins Management System
 This project was created to add my school schedule do my google calendar, but might become something bigger some day.
 
 ## Current state
-Currently the programm does not work.
+Currently the program does not work.
 
 ## TODO
 - Add support for google calendar
