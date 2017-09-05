@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
-using WebUntis;
+using System.Reflection;
+using GoogleCalendarApi;
 
 namespace Server
 {
@@ -10,12 +12,10 @@ namespace Server
     {
         static void Main(string[] args)
         {
-            var api = new WebUntisApi("stundenplan.hamburg.de", "hh5849");
-            var classes = api.QueryClasses();
-            var lessons = api.QueryLessons(classes.Find(nameFilter: "12.4"), DateTime.Now);
-            foreach (var l in lessons.Lessons)
-                Console.WriteLine(l);
-
+#if DEBUG
+            Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location));
+#endif
+            CalendarApi.Run();
         }
     }
 }

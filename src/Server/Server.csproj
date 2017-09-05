@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebUntisApi\WebUntisApi.csproj" />
+    <ProjectReference Include="..\GoogleCalendarApi\GoogleCalendarApi.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
