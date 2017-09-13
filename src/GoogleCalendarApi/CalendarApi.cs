@@ -16,28 +16,51 @@ namespace GoogleCalendarApi
 {
     public class CalendarApi
     {
-        static string[] Scopes = { CalendarService.Scope.CalendarReadonly };
-        static string ApplicationName = "Google Calendar API .NET Quickstart";
+        public readonly static string[] Scopes = { CalendarService.Scope.Calendar };
+        public readonly static string ApplicationName = "Robins Management System";
+
+        public bool Authenticated { get; private set; } = false;
+        public UserCredential Credentials { get; private set; }
+
+        private CalendarApi() { }
+        public async static CalendarApi Create()
+        {
+
+        }
+
+        public void Authenticate() => Authenticate(new FileStream("credentials.json", FileMode.Open, FileAccess.Read));
+        public async void Authenticate(Stream credStream)
+        {
+            try
+            {
+                string credPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                credPath = Path.Combine(credPath, "RMS", "creds.json");
+
+                GoogleClientSecrets googleClientSecrets = GoogleClientSecrets.Load(credStream);
+                ClientSecrets secrets = googleClientSecrets.Secrets;
+                Credentials = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+                    secrets,
+                    Scopes,
+                    "user",
+                    CancellationToken.None,
+                    new FileDataStore(credPath, true));
+                if (Credentials == null)
+                    throw new AuthorizationException("Credentials null");
+                Authenticated = true;
+            }
+            finally
+            {
+                credStream.Close();
+            }
+        }
 
         public static void Run()
         {
             UserCredential credential;
 
-            using (var stream =
-                new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
+            using (var stream = new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
             {
-                string credPath = System.Environment.GetFolderPath(
-                    System.Environment.SpecialFolder.Personal);
-                credPath = Path.Combine(credPath, ".credentials/calendar-dotnet-quickstart.json");
 
-                GoogleClientSecrets googleClientSecrets = GoogleClientSecrets.Load(stream);
-                ClientSecrets secrets = googleClientSecrets.Secrets;
-                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                    secrets,
-                    Scopes,
-                    "user",
-                    CancellationToken.None,
-                    new FileDataStore(credPath, true)).Result;
                 Console.WriteLine("Credential file saved to: " + credPath);
             }
 
@@ -81,4 +104,42 @@ namespace GoogleCalendarApi
     }
 }
 
-//ea07igp2akarl6na2nkk5ep34c@group.calendar.google.com
+/*
+{
+ "summary": "RMS_Untis",
+ "description": "Robins Management System  Web Untis Calendar",
+ "location": "Germany",
+ "timeZone": "Europe/Berlin"
+}
+{
+ "kind": "calendar#calendar",
+ "etag": "\"W8S50vTLOjlc76YTigzSZVQwSEE/7WTmvnXfYWN8batjkduWaAEYDLo\"",
+ "id": "jmnh7rjh9ba3cepqanjf1q1q7c@group.calendar.google.com",
+ "summary": "RMS_Untis",
+ "description": "Robins Management System  Web Untis Calendar",
+ "location": "Germany",
+ "timeZone": "Europe/Berlin"
+}
+{
+ "id": "jmnh7rjh9ba3cepqanjf1q1q7c@group.calendar.google.com",
+ "selected": true,
+ "summaryOverride": "Override"
+}
+{
+ "kind": "calendar#calendarListEntry",
+ "etag": "\"1504878686378000\"",
+ "id": "jmnh7rjh9ba3cepqanjf1q1q7c@group.calendar.google.com",
+ "summary": "RMS_Untis",
+ "description": "Robins Management System  Web Untis Calendar",
+ "location": "Germany",
+ "timeZone": "Europe/Berlin",
+ "summaryOverride": "Override",
+ "colorId": "17",
+ "backgroundColor": "#9a9cff",
+ "foregroundColor": "#000000",
+ "selected": true,
+ "accessRole": "owner",
+ "defaultReminders": [
+ ]
+}
+ */
