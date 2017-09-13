@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using WebUntis;
 
 namespace CLI
@@ -64,7 +65,7 @@ Command usage:
             }
 
             var api = new WebUntisApi(serverUrl, school);
-            var classes = api.QueryClasses();
+            var classes = api.QueryClasses().Result;
 
             var selectedClasses = classes
                 .FindAll(teacherFilter, classNameFilter);
@@ -87,7 +88,7 @@ Help:
     --help -h -?: Display this help");
         }
 
-        static void Timetable(string[] args)
+        public static void Timetable(string[] args)
         {
             string teacherFilter = null;
             string classNameFilter = null;
@@ -146,7 +147,7 @@ Help:
             }
 
             var api = new WebUntisApi(serverUrl, school);
-            var classes = api.QueryClasses();
+            var classes = api.QueryClasses().Result;
 
             var selectedClasses = classes
                 .FindAll(teacherFilter, classNameFilter);
@@ -160,7 +161,7 @@ Help:
             else
                 Console.WriteLine($"Multiple classes fit filter: [{string.Join(",", selectedClasses)}], Selecting {selectedClasses.First()}");
 
-            var lessons = api.QueryLessons(selectedClasses.First(), date);
+            var lessons = api.QueryLessons(selectedClasses.First(), date).Result;
 
             foreach (var l in lessons.Lessons)
                 Console.WriteLine(l);

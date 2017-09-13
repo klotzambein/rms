@@ -11,7 +11,8 @@ namespace Utility
 {
     public class Logger
     {
-        public static void SendEmail(string subject, string body)
+        private static readonly string[] emailPassword = File.ReadAllLines("credentials_email.txt");
+        public static void SendEmail(string subject, string body, string additionalInfo = "")
         {
 #if DEBUG
             throw new Exception();
@@ -19,9 +20,8 @@ namespace Utility
             try
             {
                 Log($"Sending Email: '{subject}'\n{body}", LogLevel.Verbose);
-                var fromAddress = new MailAddress("mynotsafeacc@gmail.com", "Not Safe");
+                var fromAddress = new MailAddress(emailPassword[0], "Not Safe");
                 var toAddress = new MailAddress("robin@kock-hamburg.de", "Robin");
-                const string fromPassword = "RobinIstToll";
 
                 using (var smtp = new SmtpClient
                 {
@@ -30,13 +30,13 @@ namespace Utility
                     EnableSsl = true,
                     DeliveryMethod = SmtpDeliveryMethod.Network,
                     UseDefaultCredentials = false,
-                    Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+                    Credentials = new NetworkCredential(fromAddress.Address, emailPassword[1])
                 })
                 {
                     using (var message = new MailMessage(fromAddress, toAddress)
                     {
                         Subject = "WebUnits: " + subject,
-                        Body = body + "\n\n" + (File.Exists("tmp.json") ? File.ReadAllText("tmp.json") : "[Error 404: File not found]")
+                        Body = body + "\n\n" + additionalInfo
                     })
                     {
                         smtp.Send(message);

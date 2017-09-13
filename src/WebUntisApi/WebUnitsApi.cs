@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using WebUntis.Data;
 using Utility;
+using System.Threading.Tasks;
 
 namespace WebUntis
 {
@@ -25,17 +26,17 @@ namespace WebUntis
             loginCookies = GetLoginCookies(school);
         }
 
-        public ClassTable QueryClasses()
+        public async Task<ClassTable> QueryClasses()
         {
-            return QueryClasses(-1);
+            return await QueryClasses(-1);
         }
-        public ClassTable QueryClasses(Department filter)
+        public async Task<ClassTable> QueryClasses(Department filter)
         {
-            return QueryClasses(filter.Id);
+            return await QueryClasses(filter.Id);
         }
-        public ClassTable QueryClasses(int departmentFilterId)
+        public async Task<ClassTable> QueryClasses(int departmentFilterId)
         {
-            var s1 = Stage1Object(departmentFilterId);
+            var s1 = await Stage1Object(departmentFilterId);
             CheckStage1(s1);
             return new ClassTable(s1);
         }
@@ -43,32 +44,32 @@ namespace WebUntis
         public void CheckStage1(JsonClassesStage1.RootObject stage1)
         {
             if (stage1.filters.Count != 1)
-                Logger.SendEmail("New Stage 1 Filter", $"Stage 1 has new filter(s); New Count: {stage1.filters.Count}; Filter(s): [{stage1.filters.Skip(1).Aggregate("", (a, f) => a + f.typeLabel + ",").TrimEnd(',')}]");
+                Logger.SendEmail("New Stage 1 Filter", $"Stage 1 has new filter(s); New Count: {stage1.filters.Count}; Filter(s): [{stage1.filters.Skip(1).Aggregate("", (a, f) => a + f.typeLabel + ",").TrimEnd(',')}]", WebUntisUtil.LastRequest);
         }
 
-        public TimeTable QueryLessons(Class @class, DateTime date, Stage2Filter filter = null)
+        public async Task<TimeTable> QueryLessons(Class @class, DateTime date, Stage2Filter filter = null)
         {
-            return new TimeTable(@class, Stage2Object(@class, date, filter).result);
+            return new TimeTable(@class, (await Stage2Object(@class, date, filter)).result);
         }
 
-        public JsonClassesStage1.RootObject Stage1Object(int filter_departmentId = -1)
+        public async Task<JsonClassesStage1.RootObject> Stage1Object(int filter_departmentId = -1)
         {
-            return JsonConvert.DeserializeObject<JsonClassesStage1.RootObject>(Stage1String(filter_departmentId));
+            return JsonConvert.DeserializeObject<JsonClassesStage1.RootObject>(await Stage1String(filter_departmentId));
         }
-        public JsonClassesStage1.RootObject Stage1Object(Department departmentFilter)
+        public async Task<JsonClassesStage1.RootObject> Stage1Object(Department departmentFilter)
         {
-            return JsonConvert.DeserializeObject<JsonClassesStage1.RootObject>(Stage1String(departmentFilter.Id));
+            return JsonConvert.DeserializeObject<JsonClassesStage1.RootObject>(await Stage1String(departmentFilter.Id));
         }
-        public JsonClassesStage2.RootObject Stage2Object(int elementId, DateTime date, Stage2Filter filter = null)
+        public async Task<JsonClassesStage2.RootObject> Stage2Object(int elementId, DateTime date, Stage2Filter filter = null)
         {
-            return JsonConvert.DeserializeObject<JsonClassesStage2.RootObject>(Stage2String(elementId, date, filter));
+            return JsonConvert.DeserializeObject<JsonClassesStage2.RootObject>(await Stage2String(elementId, date, filter));
         }
-        public JsonClassesStage2.RootObject Stage2Object(Class @class, DateTime date, Stage2Filter filter = null)
+        public async Task<JsonClassesStage2.RootObject> Stage2Object(Class @class, DateTime date, Stage2Filter filter = null)
         {
-            return JsonConvert.DeserializeObject<JsonClassesStage2.RootObject>(Stage2String(@class.Id, date, filter));
+            return JsonConvert.DeserializeObject<JsonClassesStage2.RootObject>(await Stage2String(@class.Id, date, filter));
         }
 
-        public string Stage1String(int filter_departmentId = -1, int formatId = 8)
+        public async Task<string> Stage1String(int filter_departmentId = -1, int formatId = 8)
         {
             var query = new Dictionary<string, string>()
             {
@@ -77,7 +78,7 @@ namespace WebUntis
                 { "formatId", formatId.ToString() },
                 { "filter.departmentId", filter_departmentId.ToString() }
             };
-            return RequestData(query, loginCookies);
+            return await RequestData(query, loginCookies);
         }
         public class Stage2Filter
         {
@@ -98,7 +99,7 @@ namespace WebUntis
                 this.departmentId = departmentId;
             }
         }
-        public string Stage2String(int elementId, DateTime date, Stage2Filter filter = null, int formatId = 8)
+        public async Task<string> Stage2String(int elementId, DateTime date, Stage2Filter filter = null, int formatId = 8)
         {
             if (filter == null)
                 filter = new Stage2Filter();
@@ -116,10 +117,10 @@ namespace WebUntis
                 { "filter.departmentId",           filter.departmentId.ToString() },
                 { "formatId",                      formatId.ToString() }
             };
-            return RequestData(query, loginCookies);
+            return await RequestData(query, loginCookies);
         }
 
-        private string RequestData(Dictionary<string, string> query, string cookieLogin)
+        private async Task<string> RequestData(Dictionary<string, string> query, string cookieLogin)
         {
             var data = "";
             foreach (var item in query)
@@ -136,8 +137,9 @@ namespace WebUntis
             var dataStream = request.GetRequestStream();
             dataStream.Write(Encoding.UTF8.GetBytes(data), 0, data.Length);
 
-            string text = new StreamReader(request.GetResponse().GetResponseStream()).ReadToEnd();
-            File.WriteAllText("tmp.json", text);
+            WebResponse response = await request.GetResponseAsync();
+            string text = await new StreamReader(response.GetResponseStream()).ReadToEndAsync();
+            WebUntisUtil.LastRequest = text;
             return text;
         }
 
