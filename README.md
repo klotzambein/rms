@@ -11,3 +11,4 @@ Currently the program does not work.
 - Add support for google calendar
 - Automatically add lessons to calendar
 - Manage alarm clock
+- Logger
