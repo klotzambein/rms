@@ -3,12 +3,12 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-
   <ItemGroup>
-    <None Update="credentials.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="credentials.json" CopyToOutputDirectory="PreserveNewest"/>
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Google.Apis.Calendar.v3" Version="*"/>
+    <PackageReference Include="SuccincT" Version="*"/>
+    <PackageReference Include="TimeZoneConverter" Version="*"/>
   </ItemGroup>
 </Project>

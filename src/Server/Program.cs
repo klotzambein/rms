@@ -15,7 +15,7 @@ namespace Server
 #if DEBUG
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location));
 #endif
-            CalendarApi.Run();
+            var api = CalendarApi.Create();
         }
     }
 }
