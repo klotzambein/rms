@@ -81,8 +81,8 @@ namespace GoogleCalendarApi
             await InitEnviroment(
                 JsonConvert.DeserializeAnonymousType(
                     File.ReadAllText(cachePath),
-                    new { calendarIds = new Dictionary<string, CalendarConfig>() })
-                    .calendarIds,
+                    new { calendars = new Dictionary<string, CalendarConfig>() })
+                    .calendars,
                 cachePath);
         public async Task InitEnviroment(string cachePath, Dictionary<string, CalendarConfig> defaultCalendarIds)
         {
@@ -91,25 +91,25 @@ namespace GoogleCalendarApi
             else
                 await InitEnviroment(defaultCalendarIds, cachePath);
         }
-        public async Task InitEnviroment(Dictionary<string, CalendarConfig> calendarIds, string cachePath)
+        public async Task InitEnviroment(Dictionary<string, CalendarConfig> calendars, string cachePath)
         {
             if (Initiated)
                 throw new InvalidOperationException("Already initiaded");
             if (!Authenticated)
                 throw new InvalidOperationException("Not authenticated");
             var listRes = await Service.CalendarList.List().ExecuteAsync();
-            var calendars = new Dictionary<string, CalendarConfig>();
-            foreach (var calId in calendarIds)
+            var newCalendars = new Dictionary<string, CalendarConfig>();
+            foreach (var calId in calendars)
             {
                 var cal = listRes.Items.FirstOrDefault(c => c.Id == calId.Value.Id);
                 if (cal != null)
-                    calendars.Add(calId.Key, new CalendarConfig(cal));
+                    newCalendars.Add(calId.Key, new CalendarConfig(cal));
                 else
-                    calendars.Add(calId.Key, new CalendarConfig(await AddCalendar(calId.Value)));
+                    newCalendars.Add(calId.Key, new CalendarConfig(await AddCalendar(calId.Value)));
             }
             File.WriteAllText(cachePath,
-                JsonConvert.SerializeObject(new { calendarIds }));
-            Calendars = calendars;
+                JsonConvert.SerializeObject(new { calendars }));
+            Calendars = newCalendars;
             Initiated = true;
         }
 
@@ -153,7 +153,7 @@ namespace GoogleCalendarApi
             return await insertReq.ExecuteAsync();
         }
 
-        public async Task<Event> AddEvent(EventConfig eventConfig, string calendarIndex, bool sendNotifications = false) => await AddEvent(eventConfig, Calendars[calendarIndex].Id, sendNotifications);
+        public async Task<Event> AddEvent(string calendarIndex, EventConfig eventConfig, bool sendNotifications = false) => await AddEvent(eventConfig, Calendars[calendarIndex].Id, sendNotifications);
         public async Task<Event> AddEvent(EventConfig eventConfig, string calendarId, bool sendNotifications = false/*, int? maxAttendees = null, bool supportsAttachments = false*/)
         {
             var body = new Event();
