@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\WebUntisApi\WebUntisApi.csproj" />
     <ProjectReference Include="..\GoogleCalendarApi\GoogleCalendarApi.csproj" />
+    <ProjectReference Include="..\ICal\ICal.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
