@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using NLog;
 using Utility;
 using static WebUntis.WebUntisUtil;
 
@@ -9,6 +10,7 @@ namespace WebUntis.Data
 {
     public class Lesson
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         public Lesson(List<LessonInfo> infos, DateTime start, int duration, int priority, CourseCode code, bool isStandard, bool isEvent, int id, int lessonId, int lessonNumber, LessonCode lessonCode, CellState cellState, string lessonText, string periodText)
         {
             Infos = infos;
@@ -46,7 +48,7 @@ namespace WebUntis.Data
                     case "substitution": IsSubstitution = @is.Value; break;
                     case "event": IsEvent = @is.Value; break;
                     default:
-                        Logger.SendEmail("New Is*", $"Is{@is.Key[0].ToString().ToUpper() + @is.Key.Substring(1)} is not a Variable.");
+                        logger.Error($"New Is, Is{@is.Key[0].ToString().ToUpper() + @is.Key.Substring(1)} is not a Variable.");
                         break;
                 }
 

@@ -12,11 +12,14 @@ using Newtonsoft.Json.Linq;
 using WebUntis.Data;
 using Utility;
 using System.Threading.Tasks;
+using NLog;
 
 namespace WebUntis
 {
     public class WebUntisApi
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         private readonly string loginCookies;
         private readonly object url;
 
@@ -44,7 +47,7 @@ namespace WebUntis
         public void CheckStage1(JsonClassesStage1.RootObject stage1)
         {
             if (stage1.filters.Count != 1)
-                Logger.SendEmail("New Stage 1 Filter", $"Stage 1 has new filter(s); New Count: {stage1.filters.Count}; Filter(s): [{stage1.filters.Skip(1).Aggregate("", (a, f) => a + f.typeLabel + ",").TrimEnd(',')}]", WebUntisUtil.LastRequest);
+                logger.Error($"New Stage 1 Filter: Stage 1 has new filter(s); New Count: {stage1.filters.Count}; Filter(s): [{stage1.filters.Skip(1).Aggregate("", (a, f) => a + f.typeLabel + ",").TrimEnd(',')}]");
         }
 
         public async Task<TimeTable> QueryLessons(Class @class, DateTime date, Stage2Filter filter = null)
@@ -138,8 +141,10 @@ namespace WebUntis
             dataStream.Write(Encoding.UTF8.GetBytes(data), 0, data.Length);
 
             WebResponse response = await request.GetResponseAsync();
-            string text = await new StreamReader(response.GetResponseStream()).ReadToEndAsync();
-            WebUntisUtil.LastRequest = text;
+            string text;
+            using (StreamReader streamReader = new StreamReader(response.GetResponseStream()))
+                text = await streamReader.ReadToEndAsync();
+
             return text;
         }
 

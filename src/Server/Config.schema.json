@@ -1,0 +1,129 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Config schema",
+    "type": "object",
+    "definitions": {
+        "filter": {
+            "type": "string",
+            "description": "A filter filtering and selecting the best match"
+        }
+    },
+    "properties": {
+        "calendars": {
+            "type": "object",
+            "description": "Containing calendar objects. Names must comply to: '^([a-z0-9_-]+/?)+$' eg. '12_4/robin' or 'all/cvo-12'.",
+            "default": {},
+            "patternProperties": {
+                "^([a-z0-9_-]+/?)+$": {
+                    "type": "object",
+                    "title": "calendar",
+                    "description": "A calendar which should be hosted",
+                    "properties": {
+                        "source": {
+                            "type": "string",
+                            "pattern": "^[A-z0-9_-]+@([A-z0-9-_]+\\.)?[A-z0-9-_]+\\.[A-z0-9-_]+$"
+                        },
+                        "classFilter": {
+                            "$ref": "#/definitions/filter"
+                        },
+                        "teacherFilter": {
+                            "$ref": "#/definitions/filter"
+                        },
+                        "courses": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "nameFilter": {
+                                        "$ref": "#/definitions/filter"
+                                    },
+                                    "warn": {
+                                        "type": "string",
+                                        "enum": [
+                                            "never",
+                                            "notFound",
+                                            "ambiguous",
+                                            "notFoundOrAmbiguous"
+                                        ]
+                                    },
+                                    "color": {
+                                        "type": "string",
+                                        "pattern": "^(default|#[A-Fa-f0-9]{3}([A-Fa-f0-9]{3})?)$",
+                                        "default": "default"
+                                    }
+                                },
+                                "required": [
+                                    "nameFilter"
+                                ]
+                            }
+                        },
+                        "update": {
+                            "type": "string",
+                            "enum": [
+                                "onDemand",
+                                "updateCycle",
+                                "daily"
+                            ]
+                        },
+                        "accumulate": {
+                            "type": "boolean",
+                            "description": "Should an event get saved once it is over",
+                            "default": true
+                        }
+                    },
+                    "required": [
+                        "source",
+                        "courses",
+                        "update",
+                        "accumulate"
+                    ]
+                }
+            }
+        },
+        "server_port": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 8080
+        },
+        "server_prefixes": {
+            "description": "One or multiple strings describing prefixes. Use \\p for port macro. Example: 'http://*:\\p/'.",
+            "type": [
+                "string",
+                "array"
+            ],
+            "items": {
+                "type": "string"
+            }
+        },
+        "loging_email": {
+            "type": "string",
+            "pattern": "^(none|[A-z0-9_.-]+@[A-z0-9_.-]+)$",
+            "default": "none"
+        },
+        "updateCycle": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]&"
+            },
+            "default": [
+                "00:30",
+                "06:30",
+                "07:00",
+                "07:15",
+                "07:30",
+                "07:45",
+                "08:00",
+                "09:00",
+                "10:00",
+                "11:00",
+                "12:00",
+                "14:00",
+                "16:00",
+                "18:00",
+                "20:00",
+                "22:00"
+            ]
+        }
+    }
+}

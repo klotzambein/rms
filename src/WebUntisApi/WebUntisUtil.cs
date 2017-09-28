@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using NLog;
 using Utility;
 using Utility.IntervalArray;
 using WebUntis.Data;
@@ -12,11 +13,13 @@ namespace WebUntis
 {
     internal static class WebUntisUtil
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         public static CourseCode ParseCourseCode(int code)
         {
             if (!Enum.IsDefined(typeof(CourseCode), code))
             {
-                Logger.SendEmail("New CourseCode", $"The Code {code} is not in the {nameof(CourseCode)} enum.", LastRequest);
+                logger.Error($"New CourseCode: The Code {code} is not in the {nameof(CourseCode)} enum.");
                 return CourseCode.Unknown;
             }
             return (CourseCode)code;
@@ -29,7 +32,7 @@ namespace WebUntis
                 case "UNTIS_ADDITIONAL": return LessonCode.UNTIS_ADDITIONAL;
                 case "UNTIS_LESSON": return LessonCode.UNTIS_LESSON;
                 default:
-                    Logger.SendEmail("New LessonCode", $"The Code {code} is not in the {nameof(LessonCode)} enum.", LastRequest);
+                    logger.Error($"New LessonCode: The Code {code} is not in the {nameof(LessonCode)} enum.");
                     return LessonCode.Unknown;
             }
         }
@@ -43,7 +46,7 @@ namespace WebUntis
                 case "CANCEL": return CellState.CANCEL;
                 case "SUBSTITUTION": return CellState.SUBSTITUTION;
                 default:
-                    Logger.SendEmail("New CellState", $"The State {state} is not in the {nameof(CellState)} enum.", LastRequest);
+                    logger.Error($"New CellState: The State {state} is not in the {nameof(CellState)} enum.");
                     return CellState.Unknown;
             }
         }
@@ -53,8 +56,6 @@ namespace WebUntis
             int argb = Int32.Parse(color.Replace("#", ""), NumberStyles.HexNumber);
             return Color.FromArgb(argb);
         }
-
-        public static string LastRequest { get; set; } = "";
 
         public static string GetPath(string fileName)
         {

@@ -1,14 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
   <ItemGroup>
-    <ProjectReference Include="..\WebUntisApi\WebUntisApi.csproj" />
-    <ProjectReference Include="..\GoogleCalendarApi\GoogleCalendarApi.csproj" />
-    <ProjectReference Include="..\ICal\ICal.csproj" />
+    <ProjectReference Include="..\WebUntisApi\WebUntisApi.csproj"/>
+    <ProjectReference Include="..\GoogleCalendarApi\GoogleCalendarApi.csproj"/>
+    <ProjectReference Include="..\ICal\ICal.csproj"/>
   </ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Include="NLog.MailKit" Version="1.1.1"/>
+  </ItemGroup>
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
-
+  <ItemGroup>
+    <None Update="NLog.config" CopyToOutputDirectory="PreserveNewest"/>
+    <None Update="Config.json" CopyToOutputDirectory="PreserveNewest"/>
+  </ItemGroup>
 </Project>

@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace Utility
 {
-    public class Logger
+/*    public class Logger
     {
         private static readonly string[] emailPassword = File.ReadAllLines("credentials_email.txt");
         public static void SendEmail(string subject, string body, string additionalInfo = "")
@@ -80,7 +80,7 @@ namespace Utility
         Message = 'M',
         Warning = 'W',
         Error = 'E',
-    }
+    }*/
 }
 
 
