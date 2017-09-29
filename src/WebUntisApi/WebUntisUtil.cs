@@ -90,13 +90,13 @@ namespace WebUntis
             }
 
             var sortedClasses = classes
-                .Select(c => Tuple.Create(c, 0));
+                .Select(c => (c, 0));
 
             if (!string.IsNullOrEmpty(teacherFilter))
             {
                 sortedClasses = sortedClasses
                     .Select(c =>
-                        Tuple.Create(c.Item1, c.Item2,
+                            (c.Item1, c.Item2,
                             (c.Item1.Teachers.Count == 0) ?
                                 int.MaxValue :
                                 c.Item1.Teachers.Min(t =>
@@ -104,21 +104,21 @@ namespace WebUntis
                                         t.longName.MatchWith(teacherFilter),
                                         t.name.MatchWith(teacherFilter)))))
                     .Where(t => t.Item3 != int.MaxValue)
-                    .Select(t => Tuple.Create(t.Item1, t.Item2 + t.Item3));
+                    .Select(t => (t.Item1, t.Item2 + t.Item3));
             }
 
             if (!string.IsNullOrEmpty(nameFilter))
             {
                 sortedClasses = sortedClasses
                     .Select(c =>
-                        Tuple.Create(c.Item1, c.Item2,
+                        (c.Item1, c.Item2,
                             Math.Min(
                                 c.Item1.Name.MatchWith(nameFilter),
                                 (c.Item1.AltNames.Count > 0) ?
                                     c.Item1.AltNames.Min(t => t.MatchWith(nameFilter)) :
                                     int.MaxValue)))
                     .Where(t => t.Item3 != int.MaxValue)
-                    .Select(t => Tuple.Create(t.Item1, t.Item2 + t.Item3));
+                    .Select(t => (t.Item1, t.Item2 + t.Item3));
             }
 
             return sortedClasses

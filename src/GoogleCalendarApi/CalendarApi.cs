@@ -229,8 +229,8 @@ namespace GoogleCalendarApi
         public string Description;
         public string Location;
         public TimeZoneInfo TimeZone;
-        /// <summary> Either<id, Tuple<foreground, background>> </summary>
-        public Either<int, Tuple<string, string>>? Colors;
+        /// <summary> Either<id, (foreground, background)> </summary>
+        public Either<int, (string Foreground, string Background)>? Colors;
         public bool? Hidden;
         public bool? Selected;
         public AccessRole? AccessRole;
@@ -244,9 +244,9 @@ namespace GoogleCalendarApi
             Location = calEntry.Location;
             TimeZone = TZConvert.GetTimeZoneInfo(calEntry.TimeZone); //TODO: Test for null case
             if (!string.IsNullOrWhiteSpace(calEntry.ColorId))
-                Colors = new Either<int, Tuple<string, string>>(int.Parse(calEntry.ColorId));
+                Colors = new Either<int, (string, string)>(int.Parse(calEntry.ColorId));
             else if (!string.IsNullOrWhiteSpace(calEntry.ForegroundColor + calEntry.BackgroundColor))
-                Colors = new Either<int, Tuple<string, string>>(Tuple.Create(calEntry.ForegroundColor, calEntry.BackgroundColor));
+                Colors = new Either<int, (string, string)>((calEntry.ForegroundColor, calEntry.BackgroundColor));
             Hidden = calEntry.Hidden;
             Selected = calEntry.Selected;
             if (!string.IsNullOrWhiteSpace(calEntry.AccessRole))
@@ -255,7 +255,7 @@ namespace GoogleCalendarApi
             NotificationSettings = calEntry.NotificationSettings.Notifications;
         }
 
-        public CalendarConfig(string id = null, string summary = null, string description = null, string location = null, TimeZoneInfo timeZone = null, string summaryOverride = null, Either<int, Tuple<string, string>>? colors = null, bool? hidden = null, bool? selected = null, AccessRole? accessRole = null, List<EventReminder> defaultReminders = null, List<CalendarNotification> notificationSettings = null)
+        public CalendarConfig(string id = null, string summary = null, string description = null, string location = null, TimeZoneInfo timeZone = null, string summaryOverride = null, Either<int, (string foreground, string background)>? colors = null, bool? hidden = null, bool? selected = null, AccessRole? accessRole = null, List<EventReminder> defaultReminders = null, List<CalendarNotification> notificationSettings = null)
         {
             Id = id;
             Summary = summary;
