@@ -29,14 +29,10 @@ namespace WebUntis
             loginCookies = GetLoginCookies(school);
         }
 
-        public async Task<ClassTable> QueryClasses()
-        {
-            return await QueryClasses(-1);
-        }
-        public async Task<ClassTable> QueryClasses(Department filter)
-        {
-            return await QueryClasses(filter.Id);
-        }
+        public async Task<ClassTable> QueryClasses() =>
+            await QueryClasses(-1);
+        public async Task<ClassTable> QueryClasses(Department filter) =>
+            await QueryClasses(filter.Id);
         public async Task<ClassTable> QueryClasses(int departmentFilterId)
         {
             var s1 = await Stage1Object(departmentFilterId);
