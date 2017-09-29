@@ -41,7 +41,7 @@ namespace Server
         public string Loging_email { get; set; } = "none";
         public IReadOnlyList<string> UpdateCycle
         {
-            get => UpdateCycleDT?.Select(t => t.ToString("HH:mm"))?.ToList(); 
+            get => UpdateCycleDT?.Select(t => t.ToString("HH:mm"))?.ToList();
             set => UpdateCycleDT = value.Select(t => DateTime.ParseExact(t, "HH:mm", CultureInfo.InvariantCulture)).ToList();
         }
         [JsonIgnore]
@@ -92,7 +92,17 @@ namespace Server
     public class CalendarProviderConfig
     {
         [JsonRequired]
-        public string Source { get; set; }
+        public string Source
+        {
+            get => $"{SourceSchool}@{SourceDomain}";
+            set => (SourceSchool, SourceDomain) = (value.Split("@")[0], value.Split("@")[1]);
+        }
+
+        [JsonIgnore]
+        public string SourceSchool { get; set; }
+
+        [JsonIgnore]
+        public string SourceDomain { get; set; }
 
         public string ClassFilter { get; set; } = null;
 
