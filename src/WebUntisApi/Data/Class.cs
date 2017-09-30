@@ -51,7 +51,7 @@ namespace WebUntis.Data
 
         public override string ToString()
         {
-            return $"<{Name}:{string.Join(",", Teachers.Select(t => $"'{(t.name.Length > t.name.Length ? t.name : t.longName)}'"))},{string.Join(",", Deps.Select(d => $"'{d.Name}'"))}>";
+            return $"<{Name}:{string.Join(",", Teachers.Select(t => $"'{(t.name.Length > t.longName.Length ? t.name : t.longName)}'"))},{string.Join(",", Deps.Select(d => $"'{d.Name}'"))}>";
         }
     }
 }
