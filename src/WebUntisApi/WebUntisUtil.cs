@@ -63,7 +63,7 @@ namespace WebUntis
         }
     }
 
-    internal static class ExtensionUtil
+    public static class ExtensionUtil
     {
         public static Dictionary<TKey, TValue> ToDictNoDups<TKey, TValue>(this IEnumerable<TValue> ienum, Func<TValue, TKey> keySelector)
         {
@@ -90,7 +90,7 @@ namespace WebUntis
             }
 
             var sortedClasses = classes
-                .Select(c => (c, 0));
+                .Select(c => (@class: c, score: 0));
 
             if (!string.IsNullOrEmpty(teacherFilter))
             {
@@ -111,19 +111,32 @@ namespace WebUntis
             {
                 sortedClasses = sortedClasses
                     .Select(c =>
-                        (c.Item1, c.Item2,
-                            Math.Min(
+                        (@class: c.@class, score: c.score,
+                            newScore: Math.Min(
                                 c.Item1.Name.MatchWith(nameFilter),
                                 (c.Item1.AltNames.Count > 0) ?
                                     c.Item1.AltNames.Min(t => t.MatchWith(nameFilter)) :
                                     int.MaxValue)))
-                    .Where(t => t.Item3 != int.MaxValue)
-                    .Select(t => (t.Item1, t.Item2 + t.Item3));
+                    .Where(t => t.newScore != int.MaxValue)
+                    .Select(t => (t.@class, t.score + t.newScore));
             }
 
             return sortedClasses
-                .OrderBy(t => t.Item2)
-                .Select(t => t.Item1);
+                .OrderBy(t => t.score)
+                .Select(t => t.@class);
+        }
+
+        public static int Score(this Lesson l, string lessonFilter)
+        {
+            return new[] {
+                l.LessonText.MatchWith(lessonFilter),
+                l.PeriodText.MatchWith(lessonFilter) }
+                .Concat(l.Infos.Select(i =>
+                    Math.Min(
+                        i.Name.MatchWith(lessonFilter),
+                        i.AltNames.Select(n =>
+                            n.MatchWith(lessonFilter)).Min())))
+                .Min();
         }
 
         public static int MatchWith(this string str, string filter)
