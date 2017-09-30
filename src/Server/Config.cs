@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using NLog;
@@ -46,6 +47,17 @@ namespace Server
         }
         [JsonIgnore]
         public IReadOnlyList<DateTime> UpdateCycleDT { get; set; } = new DateTime[0];
+        public string Encoding
+        {
+            get => EncodingEnc.EncodingName;
+            set
+            {
+                try { EncodingEnc = System.Text.Encoding.GetEncoding(value); }
+                catch (Exception ex) { logger.Warn(ex, "error while parsing encoding"); }
+            }
+        }
+        [JsonIgnore]
+        public Encoding EncodingEnc { get; set; } = System.Text.Encoding.ASCII;
     }
 
     internal class StringSingleArrayConverter : JsonConverter
@@ -129,19 +141,19 @@ namespace Server
     public class CourseConfig
     {
         [JsonRequired]
-        public string NameFilter { get; set; }
+        public string Filter { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        public WarnMethos Warn { get; set; } = WarnMethos.NotFoundOrAmbiguous;
+        public WarnMethod Warn { get; set; } = WarnMethod.NotFound;
 
         public string Color { get; set; } = "default";
     }
 
-    public enum WarnMethos
+    public enum WarnMethod
     {
-        Never,
-        NotFound,
-        Ambiguous,
-        NotFoundOrAmbiguous,
+        Never = 0b00,
+        NotFound = 0b01,
+        /*Ambiguous = 0b10,
+        NotFoundOrAmbiguous = 0b11,*/
     }
 }

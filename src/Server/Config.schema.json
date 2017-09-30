@@ -34,16 +34,14 @@
                             "items": {
                                 "type": "object",
                                 "properties": {
-                                    "nameFilter": {
+                                    "filter": {
                                         "$ref": "#/definitions/filter"
                                     },
                                     "warn": {
                                         "type": "string",
                                         "enum": [
                                             "never",
-                                            "notFound",
-                                            "ambiguous",
-                                            "notFoundOrAmbiguous"
+                                            "notFound" /*, "ambiguous", "notFoundOrAmbiguous"*/
                                         ]
                                     },
                                     "color": {
@@ -53,7 +51,7 @@
                                     }
                                 },
                                 "required": [
-                                    "nameFilter"
+                                    "filter"
                                 ]
                             }
                         },
@@ -124,6 +122,15 @@
                 "20:00",
                 "22:00"
             ]
+        },
+        "encoding": {
+            "type": "string",
+            "enum": [
+                "ascii",
+                "utf-8",
+                "utf-7"
+            ],
+            "default": "ascii"
         }
     }
 }
